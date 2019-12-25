@@ -1,8 +1,8 @@
-DROP DATABASE IF EXISTS parent_ing;
+DROP DATABASE IF EXISTS parent_ing_db;
 
-CREATE DATABASE parent_ing;
+CREATE DATABASE parent_ing_db;
 
-\c parent_ing;
+\c parent_ing_db
 
 -- USERS TABLE:
 CREATE TABLE users
@@ -23,14 +23,14 @@ CREATE TABLE categories
 (
     id SERIAL PRIMARY KEY,
     category VARCHAR UNIQUE NOT NULL
-)
+);
 
 
 -- POSTS TABLE:
 CREATE TABLE posts
 (
     id SERIAL PRIMARY KEY,
-    poster_id VARCHAR REFERENCES users (id) ON DELETE CASCADE,
+    poster_id INT REFERENCES users (id) ON DELETE CASCADE,
     category_id INT REFERENCES categories (id) ON DELETE CASCADE,
     body VARCHAR NOT NULL,
     posting_date DATE NOT NULL DEFAULT CURRENT_DATE
@@ -42,8 +42,8 @@ CREATE TABLE albums
 (
     id SERIAL PRIMARY KEY,
     album_name VARCHAR,
-    owner_id VARCHAR REFERENCES users (id) ON DELETE CASCADE,
-    album_category INT REFERENCES categories (id) ON DELETE CASCADE,
+    owner_id INT REFERENCES users (id) ON DELETE CASCADE,
+    category_id INT REFERENCES categories (id) ON DELETE CASCADE,
     album_date DATE NOT NULL DEFAULT CURRENT_DATE
 );
 
@@ -62,7 +62,7 @@ CREATE TABLE pictures
 CREATE TABLE comments
 (
     id SERIAL PRIMARY KEY,
-    author_id VARCHAR REFERENCES users (id) ON DELETE CASCADE,
+    author_id INT REFERENCES users (id) ON DELETE CASCADE,
     post_id INT REFERENCES posts (id) ON DELETE CASCADE,
     picture_id INT REFERENCES pictures (id) ON DELETE CASCADE,
     comment TEXT,
@@ -74,7 +74,7 @@ CREATE TABLE comments
 CREATE TABLE likes
 (
     id SERIAL PRIMARY KEY,
-    liker_id VARCHAR REFERENCES users (id) ON DELETE CASCADE,
+    liker_id INT REFERENCES users (id) ON DELETE CASCADE,
     post_id INT REFERENCES posts (id) ON DELETE CASCADE,
     picture_id INT REFERENCES pictures (id) ON DELETE CASCADE
 );
@@ -118,14 +118,13 @@ VALUES
     (4, 4,'try to deal with a teenager!!!');
 
 
--- INSERT INTO comments
---     (author_id, post_id, comment)
--- VALUES
---     (, 1, 'Better late then never'),
---     ('jenama', 2, 'cute creatures'),
---     ('aminescodes', 2, 'yeah, unless they are a ninja one'),
---     ('vonbar', 5, 'Go fot it!!'),
---     ('vonbar', 8, 'Interesting point of view');
+INSERT INTO comments
+    (author_id, post_id, comment)
+VALUES
+    (1, 1, 'it\''s also a lot of work dealing with new borns'),
+    (2, 1, 'yes, I\''ve to admit that'),
+    (3, 1, 'is he your first one ?'),
+    (2, 1, 'yes, and the only one now');
 
 
 INSERT INTO albums
@@ -157,42 +156,42 @@ VALUES
 
 
 
--- INSERT INTO comments
---     (author_id, picture_id, comment)
--- VALUES
---     ('aminescodes', 1, 'Amine Comment on Johanne album1 picture1'),
---     ('sergiocohens', 2, 'Sergio Comment on Johanne album1 picture2'),
---     ('jenama', 3, 'Johanne Comment Sergio on album1 picture1'),
---     ('jenama', 4, 'Johanne Comment Sergio on album1 picture2'),
---     ('vonbar', 5, 'VonielComment on Amin album1 picture1'),
---     ('sergiocohens', 6, 'Sergio Comment Amin on album1 picture2'),
---     ('vonbar', 7, 'Voniel Comment on Voniel album1 picture1'),
---     ('jenama', 8, 'Johanne Comment on Voniel album1 picture2'),
---     ('vonbar', 9, 'Voniel Comment on Amin album2 picture1'),
---     ('sergiocohens', 7, 'Sergio Comment on Voniel album1 picture1');
+INSERT INTO comments
+    (author_id, picture_id, comment)
+VALUES
+    (2, 1, 'Amine Comment on Johanne album1 picture1'),
+    (3, 2, 'Sergio Comment on Johanne album1 picture2'),
+    (4, 3, 'Johanne Comment Sergio on album1 picture1'),
+    (4, 4, 'Johanne Comment Sergio on album1 picture2'),
+    (1, 5, 'VonielComment on Amin album1 picture1'),
+    (3, 6, 'Sergio Comment Amin on album1 picture2'),
+    (1, 7, 'Voniel Comment on Voniel album1 picture1'),
+    (4, 8, 'Johanne Comment on Voniel album1 picture2'),
+    (1, 9, 'Voniel Comment on Amin album2 picture1'),
+    (3, 7, 'Sergio Comment on Voniel album1 picture1');
 
 
--- INSERT INTO likes
---     (liker_username, post_id)
--- VALUES
---     ('jenama', 1),
---     ('jenama', 2),
---     ('jenama', 3),
---     ('jenama', 4),
---     ('sergiocohens', 2),
---     ('sergiocohens', 4),
---     ('sergiocohens', 5),
---     ('sergiocohens', 6);
+INSERT INTO likes
+    (liker_id, post_id)
+VALUES
+    (4, 1),
+    (4, 2),
+    (4, 3),
+    (4, 4),
+    (3, 2),
+    (3, 4),
+    (3, 5),
+    (3, 6);
 
 
--- INSERT INTO likes
---     (liker_username, picture_id)
--- VALUES
---     ('aminescodes', 1),
---     ('aminescodes', 2),
---     ('aminescodes', 3),
---     ('aminescodes', 7),
---     ('vonbar', 1),
---     ('vonbar', 2),
---     ('vonbar', 3),
---     ('vonbar', 4);
+INSERT INTO likes
+    (liker_id, picture_id)
+VALUES
+    (2, 1),
+    (2, 2),
+    (2, 3),
+    (2, 7),
+    (1, 1),
+    (1, 2),
+    (1, 3),
+    (1, 4);
