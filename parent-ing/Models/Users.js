@@ -24,7 +24,7 @@ const createUser = async (user) => {
 const getUserByUsername = async (username) => {
     try {
         const requestQuery = `
-            SELECT id, username, firstnane, lastname, dob, email. signing_date
+            SELECT id, username, firstname, lastname, dob, email. signing_date
             FROM users
             WHERE username = $1'
         `
@@ -39,7 +39,7 @@ const getUserByUsername = async (username) => {
 const getUserById = async (id) => {
     try {
         const requestQuery = `
-            SELECT id, username, firstnane, lastname, dob, email. signing_date
+            SELECT id, username, firstname, lastname, dob, email. signing_date
             FROM users
             WHERE id = $1'
         `
@@ -54,7 +54,7 @@ const getUserById = async (id) => {
 const getAll = async () => {
     try {
         const requestQuery = `
-            SELECT id, username, firstnane, lastname, dob, email. signing_date
+            SELECT id, username, firstname, lastname, dob, email. signing_date
             FROM users'
         `
         const users = await db.any(requestQuery);
@@ -70,8 +70,8 @@ const updateUserInfo = async (user) => {
         const updateQuery = `UPDATE users 
         SET username=$1, firstname=$2, lastname=$3, dob=$4, email=$5
         WHERE id = $6 
-        RETURNING id, username, firstname, lastname, dob, email, signing_date`
-  
+        RETURNING id, username, firstname, lastname, dob, email, signing_date
+        `
         const user = await db.one(updateQuery, [user.username, user.firstname, user.lastname, user.dob, user.email, user.id])
         return user;
     } catch (err) {
@@ -85,9 +85,22 @@ const updateUserPassword = async (userId, password) => {
         const updateQuery = `UPDATE users 
         SET user_password = $1
         WHERE id = $2 
-        RETURNING *`
-  
+        RETURNING *
+        `
         const user = await db.one(updateQuery, [password, userId])
+        return user;
+    } catch (err) {
+        throw err;
+    }
+}
+
+const deleteUSer = async (userId) => {
+    try {
+        const deleteQuery = `delete from users
+        WHERE id = $1 
+        RETURNING id, username, signing_date
+        `
+        const user = await db.one(deleteQuery, userId)
         return user;
     } catch (err) {
         throw err;
@@ -100,5 +113,6 @@ module.exports = {
     getUserById,
     getAll,
     updateUserInfo,
-    updateUserPassword
+    updateUserPassword,
+    deleteUSer
   }
