@@ -1,4 +1,5 @@
 const DB = require('../Database/database');
+// const { DB } = require('../Database/database');
 
 const createUser = async (user) => {
     try {
@@ -8,8 +9,9 @@ const createUser = async (user) => {
         VALUES
             ($1, $2, $3, $4, $5, $6) 
         RETURNING 
-            id, username, signing_date`;
-      let newUser = await db.one(insertQuery, [user.username, user.firstname, user.lastname, user.dob, user.user_password, user.email])
+            id, username, signing_date
+        `;
+      let newUser = await DB.one(insertQuery, [user.username, user.firstname, user.lastname, user.dob, user.user_password, user.email])
       return newUser;
     } catch (err) {
       // Username already taken 
@@ -24,14 +26,17 @@ const createUser = async (user) => {
 const getUserByUsername = async (username) => {
     try {
         const requestQuery = `
-            SELECT id, username, firstname, lastname, dob, email. signing_date
+            SELECT id, username, firstname, lastname, dob, email, signing_date
             FROM users
-            WHERE username = $1'
+            WHERE username = $1
         `
-        const user = await db.one(requestQuery, username);
+        const user = await DB.one(requestQuery, username);
         return user;
     } catch (err) {
         console.log(err);
+        if (err.message === 'No data returned from the query') {
+            return 'No Match'
+        }
         throw err;
     }
 }
@@ -39,25 +44,28 @@ const getUserByUsername = async (username) => {
 const getUserById = async (id) => {
     try {
         const requestQuery = `
-            SELECT id, username, firstname, lastname, dob, email. signing_date
+            SELECT id, username, firstname, lastname, dob, email, signing_date
             FROM users
-            WHERE id = $1'
+            WHERE id = $1
         `
-        const user = await db.one(requestQuery, id);
+        const user = await DB.one(requestQuery, id);
         return user;
     } catch (err) {
         console.log(err)
+        if (err.message === 'No data returned from the query') {
+            return 'No Match'
+        }
         throw err;
     }
 }
 
-const getAll = async () => {
+const getAllUsers = async () => {
     try {
         const requestQuery = `
-            SELECT id, username, firstname, lastname, dob, email. signing_date
-            FROM users'
+            SELECT id, username, firstname, lastname, dob, email, signing_date
+            FROM users
         `
-        const users = await db.any(requestQuery);
+        const users = await DB.any(requestQuery);
         return users;
     } catch (err) {
         console.log(err)
@@ -72,9 +80,10 @@ const updateUserInfo = async (user) => {
         WHERE id = $6 
         RETURNING id, username, firstname, lastname, dob, email, signing_date
         `
-        const user = await db.one(updateQuery, [user.username, user.firstname, user.lastname, user.dob, user.email, user.id])
+        const user = await DB.one(updateQuery, [user.username, user.firstname, user.lastname, user.dob, user.email, user.id])
         return user;
     } catch (err) {
+        console.log(err)
         throw err;
     }
 }
@@ -87,9 +96,10 @@ const updateUserPassword = async (userId, password) => {
         WHERE id = $2 
         RETURNING *
         `
-        const user = await db.one(updateQuery, [password, userId])
+        const user = await DB.one(updateQuery, [password, userId])
         return user;
     } catch (err) {
+        console.log(err)
         throw err;
     }
 }
@@ -100,9 +110,10 @@ const deleteUSer = async (userId) => {
         WHERE id = $1 
         RETURNING id, username, signing_date
         `
-        const user = await db.one(deleteQuery, userId)
+        const user = await DB.one(deleteQuery, userId)
         return user;
     } catch (err) {
+        console.log(err)
         throw err;
     }
 }
@@ -111,7 +122,7 @@ module.exports = {
     createUser,
     getUserByUsername,
     getUserById,
-    getAll,
+    getAllUsers,
     updateUserInfo,
     updateUserPassword,
     deleteUSer
