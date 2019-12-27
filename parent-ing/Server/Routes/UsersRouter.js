@@ -118,7 +118,55 @@ Router.put('/:userId', async (request, response) => {
 
             if (authorizedToUpdate) {
                 try {
-                    const updatedUser = await Users.updateUserInfo(request.body)
+                    const updatedUser = await Users.updateUserInfo(userId, request.body)
+                    response.json({
+                        status: 'success',
+                        payload: updatedUser,
+                    })
+                } catch (err) {
+                    console.log(err)
+                    response.status(500)
+                    response.json({
+                        status: 'failed',
+                        payload: null,
+                    })
+                }
+            } else {
+                response.status(500)
+                response.json({
+                    status: 'failed',
+                    payload: null,
+                })
+            }
+        } catch (err) {
+            console.log(err)
+            response.status(500)
+            response.json({
+                status: 'failed',
+                payload: null,
+            })
+        }
+    }
+})
+
+
+Router.patch('/:userId/password', async (request, response) => {
+    const userId = request.params.userId;
+    const { oldPassword, newPassword, confirmedPassword } = request.body
+
+    if (!oldPassword || !newPassword || !confirmedPassword ||newPassword !== confirmedPassword) {
+        response.status(500)
+            response.json({
+                status: 'failed',
+                payload: null,
+            })
+    } else {
+        try {
+            const authorizedToUpdate = await Users.authentifyUser(userId, password)
+
+            if (authorizedToUpdate) {
+                try {
+                    const updatedUser = await Users.updateUserInfo(userId, newPassword)
                     response.json({
                         status: 'success',
                         payload: updatedUser,

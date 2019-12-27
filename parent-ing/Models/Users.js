@@ -70,15 +70,16 @@ const getAllUsers = async () => {
     }
 }
 
-const updateUserInfo = async (user) => {
+const updateUserInfo = async (userId, user) => {
     try {
+
         const updateQuery = `UPDATE users 
         SET username=$1, firstname=$2, lastname=$3, dob=$4, email=$5
         WHERE id = $6 
         RETURNING id, username, firstname, lastname, dob, email, signing_date
         `
-        const user = await DB.one(updateQuery, [user.username, user.firstname, user.lastname, user.dob, user.email, user.id])
-        return user;
+        const updatedUser = await DB.one(updateQuery, [user.username, user.firstname, user.lastname, user.dob, user.email, userId])
+        return updatedUser;
     } catch (err) {
         throw err;
     }
