@@ -77,6 +77,7 @@ Router.get('/:username', async (request, response) => {
 
 Router.post('/signup', async (request, response) => {
     const { username, firstname, lastname, dob, password, email } = request.body
+
     if (!username || !firstname || !lastname || !dob || !password || !email) {
         response.status(500)
             response.json({
@@ -90,6 +91,53 @@ Router.post('/signup', async (request, response) => {
                 status: 'success',
                 payload: newUser,
             })
+        } catch (err) {
+            console.log(err)
+            response.status(500)
+            response.json({
+                status: 'failed',
+                payload: null,
+            })
+        }
+    }
+})
+
+Router.put('/:userId', async (request, response) => {
+    const userId = request.params.userId;
+    const { username, firstname, lastname, dob, password, email } = request.body
+
+    if (!username || !firstname || !lastname || !dob || !password || !email) {
+        response.status(500)
+            response.json({
+                status: 'failed',
+                payload: null,
+            })
+    } else {
+        try {
+            const authorizedToUpdate = await Users.authentifyUser(userId, password)
+
+            if (authorizedToUpdate) {
+                try {
+                    const updatedUser = await Users.updateUserInfo(request.body)
+                    response.json({
+                        status: 'success',
+                        payload: updatedUser,
+                    })
+                } catch (err) {
+                    console.log(err)
+                    response.status(500)
+                    response.json({
+                        status: 'failed',
+                        payload: null,
+                    })
+                }
+            } else {
+                response.status(500)
+                response.json({
+                    status: 'failed',
+                    payload: null,
+                })
+            }
         } catch (err) {
             console.log(err)
             response.status(500)

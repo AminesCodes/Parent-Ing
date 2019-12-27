@@ -33,7 +33,6 @@ const getUserByUsername = async (username) => {
         const user = await DB.one(requestQuery, username);
         return user;
     } catch (err) {
-        console.log(err);
         if (err.message === 'No data returned from the query') {
             return 'No Match'
         }
@@ -51,7 +50,6 @@ const getUserById = async (id) => {
         const user = await DB.one(requestQuery, id);
         return user;
     } catch (err) {
-        console.log(err)
         if (err.message === 'No data returned from the query') {
             return 'No Match'
         }
@@ -68,7 +66,6 @@ const getAllUsers = async () => {
         const users = await DB.any(requestQuery);
         return users;
     } catch (err) {
-        console.log(err)
         throw err;
     }
 }
@@ -83,7 +80,6 @@ const updateUserInfo = async (user) => {
         const user = await DB.one(updateQuery, [user.username, user.firstname, user.lastname, user.dob, user.email, user.id])
         return user;
     } catch (err) {
-        console.log(err)
         throw err;
     }
 }
@@ -99,7 +95,6 @@ const updateUserPassword = async (userId, password) => {
         const user = await DB.one(updateQuery, [password, userId])
         return user;
     } catch (err) {
-        console.log(err)
         throw err;
     }
 }
@@ -113,7 +108,21 @@ const deleteUSer = async (userId) => {
         const user = await DB.one(deleteQuery, userId)
         return user;
     } catch (err) {
-        console.log(err)
+        throw err;
+    }
+}
+
+const authentifyUser = async (userId, password) => {
+    try {
+        const requestQuery = `
+        Select user_password FROM users WHERE id = $1
+        `
+        const registeredPassword = await DB.one(requestQuery, userId)
+        if (password === registeredPassword) {
+            return true
+        }
+        return false
+    } catch (err) {
         throw err;
     }
 }
@@ -125,5 +134,6 @@ module.exports = {
     getAllUsers,
     updateUserInfo,
     updateUserPassword,
-    deleteUSer
+    deleteUSer,
+    authentifyUser
   }
