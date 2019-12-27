@@ -8,7 +8,7 @@ CREATE DATABASE parent_ing_db;
 CREATE TABLE users
 (
     id SERIAL PRIMARY KEY,
-    username VARCHAR NOT NULL,
+    username VARCHAR UNIQUE NOT NULL,
     firstname VARCHAR NOT NULL,
     lastname VARCHAR NOT NULL,
     dob DATE NOT NULL,

@@ -11,7 +11,7 @@ const createUser = async (user) => {
         RETURNING 
             id, username, signing_date
         `;
-      let newUser = await DB.one(insertQuery, [user.username, user.firstname, user.lastname, user.dob, user.user_password, user.email])
+      let newUser = await DB.one(insertQuery, [user.username, user.firstname, user.lastname, user.dob, user.password, user.email])
       return newUser;
     } catch (err) {
       // Username already taken 
