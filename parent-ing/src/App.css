@@ -1,6 +1,40 @@
 .App {
-  text-align: center;
+  
 }
+
+.form-group {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+.ph-area {
+  position: absolute;
+  top: 0;
+  padding: 7px 0 0 13px;
+  transition: all 200ms;
+  opacity: 0.5;
+  font-family: merienda;
+  color: black;
+}
+
+.form-control:focus + .ph-area,
+.form-control:valid + .ph-area {
+  font-size: 75%;
+  transform: translate3d(0, -100%, 0);
+  opacity: 1;
+  color: #fff;
+}
+
+.right-text {
+  text-align: right;
+}
+
+@media (max-width: 800px) {
+  .wrapper{
+      width: 100%;
+  }
+}
+
 
 
 @media (prefers-reduced-motion: no-preference) {

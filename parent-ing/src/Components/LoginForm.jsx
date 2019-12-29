@@ -24,15 +24,23 @@ export default class LoginFrom extends React.PureComponent {
     }
 
     handleFirstNameInput = event => {
-
+        this.setState({firstName: event.target.value})
     }
-
+    
     handleLastNameInput = event => {
-
+        this.setState({lastName: event.target.value})
+    }
+    
+    handleDobInput = event => {
+        this.setState({dob: event.target.value})
+    }
+    
+    handleEmailInput = event => {
+        this.setState({email: event.target.value})
     }
 
-    handleDobInput = event => {
-
+    handlePasswordInput = event => {
+        this.setState({password: event.target.value})
     }
 
     handleSigninBtn = () => {
@@ -44,23 +52,35 @@ export default class LoginFrom extends React.PureComponent {
 
         if (!this.state.login) {
             signinFields = <>
-                <label className='mr-sm-2' htmlFor='firstname'>First name: </label>
-                <input className='form-control mb-2 mr-sm-2' id='firstname' type='text' value={this.state.firstName} onChange={this.handleFirstNameInput}></input>
-                <label className='mr-sm-2' htmlFor='lastname'>Last name: </label>
-                <input className='form-control mb-2 mr-sm-2' id='lastname' type='text' value={this.state.lastName} onChange={this.handleLastNameInput}></input>
-                <label className='mr-sm-2' htmlFor='firstname'>Date of birth</label>
-                <input className='form-control mb-2 mr-sm-2' id='firstname' type='date' value={this.state.dob} onChange={this.handleDobInput}></input>
+                <div className="form-group">
+                    <input className='form-control' id='firstname' type='text' value={this.state.firstName} onChange={this.handleFirstNameInput} required></input>
+                    <label className='ph-area' htmlFor='firstname'>First name: </label>
+                </div>
+                <div className="form-group">
+                    <input className='form-control' id='lastname' type='text' value={this.state.lastName} onChange={this.handleLastNameInput} required></input>
+                    <label className='ph-area' htmlFor='lastname'>Last name: </label>
+                </div>
+                <div className="form-group">
+                    <input className='form-control right-text' id='firstname' type='date' value={this.state.dob} onChange={this.handleDobInput} required></input>
+                    <label className='ph-area' htmlFor='firstname'>Date of birth</label>
+                </div>
             </>
         }
         return(
-            <form className='form-inline' onSubmit={this.handleFormSubmit}>
-                <label className='mr-sm-2' htmlFor='email'>Email address: </label>
-                <input className='form-control mb-2 mr-sm-2' id='email' type='email' value={this.state.firstName} onChange={this.handleFirstNameInput}></input>
-                <label className='mr-sm-2' htmlFor='password'>password: </label>
-                <input className='form-control mb-2 mr-sm-2' id='password' type='password' value={this.state.lastName} onChange={this.handleLastNameInput}></input>
+            <form className='was-validated' onSubmit={this.handleFormSubmit}>
+                <div className="form-group">
+                    <input className='form-control' id='email' type='email' value={this.state.email} onChange={this.handleEmailInput} required></input>
+                    <label className='ph-area' htmlFor='email'>Email address: </label>
+                </div>
+                <div className="form-group">
+                    <input className='form-control' id='password' type='password' value={this.state.password} onChange={this.handlePasswordInput} required></input>
+                    <label className='ph-area' htmlFor='password'>password: </label>
+                </div>
                 {signinFields}
-                <button>Login</button>
-                <button onClick={this.handleSigninBtn}>Sign-in</button>
+                <div className='d-flex'>
+                    <button className='p-2'>Login</button>
+                    <button className='p-2 ml-auto' onClick={this.handleSigninBtn}>Sign-in</button>
+                </div>
             </form>
         )
     }

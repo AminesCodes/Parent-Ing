@@ -1,14 +1,16 @@
 import React from 'react';
 import './App.css';
 
+import Logo from './Media/Parent-Ing_Logo.png'
+
 import LoginForm from './Components/LoginForm'
 
 function App() {
   return (
     <div className="App">
-      <div className="jumbotron jumbotron-fluid bg-dark text-white">
-        <div className="container-fluid">
-          <img src='./Media/Parent-Ing_Logo.png' alt='app logo' />
+      <div className="jumbotron bg-success text-white">
+        <div className="container-sm">
+          <img className='img-fluid' src={Logo} alt='app logo'/>
           <h1>My App</h1>
         </div>
         <LoginForm />
