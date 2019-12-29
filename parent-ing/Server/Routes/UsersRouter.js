@@ -36,7 +36,7 @@ Router.get('/all', async (request, response) => {
 
 Router.get('/:username', async (request, response) => {
     const username = request.params.username
-    let userId = false,
+    let userId = false
 
     if (!isNaN(parseInt(username)) && username.length === (parseInt(username) + '').length) {
         userId = username
@@ -74,6 +74,44 @@ Router.get('/:username', async (request, response) => {
         }
     }
 })
+
+
+Router.patch('/login', async (request, response) => {
+    const { password, email } = request.body
+    console.log(email, password)
+
+    if (!password || !email) {
+        response.status(500)
+            response.json({
+                status: 'failed',
+                payload: null,
+            })
+    } else {
+        try {
+            const userToLog = await Users.logUser(email, password)
+            if (userToLog) {
+                response.json({
+                    status: 'success',
+                    payload: userToLog,
+                })
+            } else {
+                response.status(500)
+                response.json({
+                    status: 'failed',
+                    payload: null,
+                })
+            }
+        } catch (err) {
+            console.log(err)
+            response.status(500)
+            response.json({
+                status: 'failed',
+                payload: null,
+            })
+        }
+    }
+})
+
 
 Router.post('/signup', async (request, response) => {
     const { username, firstname, lastname, dob, password, email } = request.body

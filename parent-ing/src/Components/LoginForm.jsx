@@ -1,4 +1,5 @@
 import React from 'react';
+import Axios from 'axios'
 
 export default class LoginFrom extends React.PureComponent {
     state = {
@@ -13,13 +14,35 @@ export default class LoginFrom extends React.PureComponent {
         loggedPassword: '',
     }
 
-    handleFormSubmit = event => {
+    handleFormSubmit = async (event) => {
         event.preventDefault()
 
         if (this.state.login) {
-
+            const user = {
+                email: this.state.email,
+                password: this.state.password
+            }
+            try {
+                const { data } = Axios.patch('http://localhost:3129/users/login', user)
+                console.log(data)
+            } catch (err) {
+                console.log(err)
+            }
         } else {
-            
+            const user = { 
+                username: this.state.username, 
+                firstname: this.state.firstName, 
+                lastname: this.state.lastName, 
+                dob: this.state.dob, 
+                password: this.state.password, 
+                email: this.state.email
+            }
+            try {
+                const { data } = Axios.post('http://localhost:3129/users/signup', user)
+                console.log(data)
+            } catch (err) {
+                console.log(err)
+            }
         }
     }
 

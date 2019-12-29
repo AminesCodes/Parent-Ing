@@ -128,6 +128,23 @@ const authentifyUser = async (userId, password) => {
     }
 }
 
+const logUser = async (email, password) => {
+    console.log('called')
+    try {
+        const requestQuery = `
+        Select * FROM users WHERE username = $1
+        `
+        const registeredUser = await DB.one(requestQuery, email)
+        if (password === registeredUser.user_password) {
+            delete registeredUser.user_password
+            return registeredUser
+        }
+        return false
+    } catch (err) {
+        throw err;
+    }
+}
+
 module.exports = {
     createUser,
     getUserByUsername,
@@ -136,5 +153,6 @@ module.exports = {
     updateUserInfo,
     updateUserPassword,
     deleteUSer,
-    authentifyUser
+    authentifyUser,
+    logUser
   }
