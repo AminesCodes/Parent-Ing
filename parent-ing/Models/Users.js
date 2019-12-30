@@ -129,10 +129,9 @@ const authentifyUser = async (userId, password) => {
 }
 
 const logUser = async (email, password) => {
-    console.log('called')
     try {
         const requestQuery = `
-        Select * FROM users WHERE username = $1
+        Select * FROM users WHERE email = $1
         `
         const registeredUser = await DB.one(requestQuery, email)
         if (password === registeredUser.user_password) {
@@ -141,6 +140,11 @@ const logUser = async (email, password) => {
         }
         return false
     } catch (err) {
+        if (err.message) {
+            if (err.message === 'No data returned from the query.') {
+                return false;
+            }
+        }
         throw err;
     }
 }

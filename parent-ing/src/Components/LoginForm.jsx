@@ -1,5 +1,25 @@
 import React from 'react';
-import Axios from 'axios'
+import Axios from 'axios';
+
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+const handleNetworkErrors = err => {
+    if (err.response) {
+        if (err.response.data.message) {
+            toast.error(err.response.data.message, 
+                { position: toast.POSITION.TOP_CENTER });
+        }
+    } else if (err.message) {
+        toast.error(err.message, 
+            { position: toast.POSITION.TOP_CENTER });
+    } else {
+        toast.error('Sorry, an error occured, try again later', 
+            { position: toast.POSITION.TOP_CENTER });
+        console.log('Error', err);
+    }
+}
+
 
 export default class LoginFrom extends React.PureComponent {
     state = {
@@ -12,6 +32,7 @@ export default class LoginFrom extends React.PureComponent {
         dob: '',
         loggedUser: '',
         loggedPassword: '',
+        loading: false,
     }
 
     handleFormSubmit = async (event) => {
@@ -23,10 +44,16 @@ export default class LoginFrom extends React.PureComponent {
                 password: this.state.password
             }
             try {
-                const { data } = Axios.patch('http://localhost:3129/users/login', user)
+                this.setState({loading: true})
+                const { data } = await Axios.patch('http://localhost:3129/users/login', user)
                 console.log(data)
+                this.setState({
+                    loading: false,
+                    loggedUser: data.payload
+                })
             } catch (err) {
-                console.log(err)
+                this.setState({loading: false})
+                handleNetworkErrors(err)
             }
         } else {
             const user = { 
@@ -38,13 +65,21 @@ export default class LoginFrom extends React.PureComponent {
                 email: this.state.email
             }
             try {
-                const { data } = Axios.post('http://localhost:3129/users/signup', user)
+                this.setState({loading: true})
+                const { data } = await Axios.post('http://localhost:3129/users/signup', user)
                 console.log(data)
+                this.setState({loading: false})
             } catch (err) {
-                console.log(err)
+                this.setState({loading: false})
+                handleNetworkErrors(err)
             }
         }
     }
+
+    handleUsernameInput = event => {
+        this.setState({username: event.target.value})
+    }
+
 
     handleFirstNameInput = event => {
         this.setState({firstName: event.target.value})
@@ -69,12 +104,29 @@ export default class LoginFrom extends React.PureComponent {
     handleSigninBtn = () => {
         this.setState({login: false})
     }
+
+    handleLoginBtn = () => {
+        this.setState({login: true})
+    }
+
+
     //################# RENDER ################
     render() {
+        let spinner = false;
+
+        if (this.state.loading) {
+            spinner = <div className="spinner-border" role="status">
+            <span className="sr-only">Loading...</span>
+          </div>
+        }
         let signinFields = null;
 
         if (!this.state.login) {
             signinFields = <>
+                <div className="form-group">
+                    <input className='form-control' id='username' type='text' value={this.state.username} onChange={this.handleUsernameInput} required></input>
+                    <label className='ph-area' htmlFor='username'>Username: </label>
+                </div>
                 <div className="form-group">
                     <input className='form-control' id='firstname' type='text' value={this.state.firstName} onChange={this.handleFirstNameInput} required></input>
                     <label className='ph-area' htmlFor='firstname'>First name: </label>
@@ -84,8 +136,8 @@ export default class LoginFrom extends React.PureComponent {
                     <label className='ph-area' htmlFor='lastname'>Last name: </label>
                 </div>
                 <div className="form-group">
-                    <input className='form-control right-text' id='firstname' type='date' value={this.state.dob} onChange={this.handleDobInput} required></input>
-                    <label className='ph-area' htmlFor='firstname'>Date of birth</label>
+                    <input className='form-control right-text' id='dob' type='date' value={this.state.dob} onChange={this.handleDobInput} required></input>
+                    <label className='ph-area' htmlFor='dob'>Date of birth</label>
                 </div>
             </>
         }
@@ -100,9 +152,10 @@ export default class LoginFrom extends React.PureComponent {
                     <label className='ph-area' htmlFor='password'>password: </label>
                 </div>
                 {signinFields}
-                <div className='d-flex'>
-                    <button className='p-2'>Login</button>
-                    <button className='p-2 ml-auto' onClick={this.handleSigninBtn}>Sign-in</button>
+                <div className='d-sm-flex justify-content-between'>
+                    <button className='d-sm-block' onClick={this.handleLoginBtn}>Login</button>
+                    {spinner}
+                    <button className='d-sm-block' onClick={this.handleSigninBtn}>Sign-in</button>
                 </div>
             </form>
         )

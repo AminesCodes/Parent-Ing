@@ -2,20 +2,7 @@ const Express = require('express');
 const Router = Express.Router();
 
 const Users = require('../../Models/Users');
-// const a = async() => {
-//     const user = {
-//         username: 'crazy', 
-//         firstname: 'A', 
-//         lastname: 'B', dob: '2000-01-01', 
-//         user_password: 'tired', 
-//         email: 'a@b.com'
-//     }
-//     // const b = await Users.getUserByUsername('aminescodess')
-//     // const b = await Users.createUser(user)
-//     console.log(b)
-//     return b
-// }
-// a()
+
 
 Router.get('/all', async (request, response) => {
     try {
@@ -76,15 +63,15 @@ Router.get('/:username', async (request, response) => {
 })
 
 
+// Login a registered user
 Router.patch('/login', async (request, response) => {
     const { password, email } = request.body
-    console.log(email, password)
 
     if (!password || !email) {
-        response.status(500)
+        response.status(400)
             response.json({
                 status: 'failed',
-                payload: null,
+                message: 'Missing Information',
             })
     } else {
         try {
@@ -95,10 +82,10 @@ Router.patch('/login', async (request, response) => {
                     payload: userToLog,
                 })
             } else {
-                response.status(500)
+                response.status(401)
                 response.json({
                     status: 'failed',
-                    payload: null,
+                    message: 'Bad Combination email/password',
                 })
             }
         } catch (err) {
@@ -106,7 +93,7 @@ Router.patch('/login', async (request, response) => {
             response.status(500)
             response.json({
                 status: 'failed',
-                payload: null,
+                message: 'Sorry, something went wrong',
             })
         }
     }
@@ -117,10 +104,10 @@ Router.post('/signup', async (request, response) => {
     const { username, firstname, lastname, dob, password, email } = request.body
 
     if (!username || !firstname || !lastname || !dob || !password || !email) {
-        response.status(500)
+        response.status(400)
             response.json({
                 status: 'failed',
-                payload: null,
+                message: 'Missing Information',
             })
     } else {
         try {
@@ -145,10 +132,10 @@ Router.put('/:userId', async (request, response) => {
     const { username, firstname, lastname, dob, password, email } = request.body
 
     if (!username || !firstname || !lastname || !dob || !password || !email) {
-        response.status(500)
+        response.status(400)
             response.json({
                 status: 'failed',
-                payload: null,
+                message: 'Missing Information',
             })
     } else {
         try {
@@ -193,10 +180,10 @@ Router.patch('/:userId/password', async (request, response) => {
     const { oldPassword, newPassword, confirmedPassword } = request.body
 
     if (!oldPassword || !newPassword || !confirmedPassword ||newPassword !== confirmedPassword) {
-        response.status(500)
+        response.status(400)
             response.json({
                 status: 'failed',
-                payload: null,
+                message: 'Missing Information',
             })
     } else {
         try {
@@ -241,10 +228,10 @@ Router.patch('/:userId/delete', async (request, response) => {
     const { password } = request.body
 
     if (!password) {
-        response.status(500)
+        response.status(400)
             response.json({
                 status: 'failed',
-                payload: null,
+                message: 'Missing Information',
             })
     } else {
         try {

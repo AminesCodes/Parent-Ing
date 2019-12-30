@@ -12,7 +12,7 @@ CREATE TABLE users
     firstname VARCHAR NOT NULL,
     lastname VARCHAR NOT NULL,
     dob DATE NOT NULL,
-    email VARCHAR NOT NULL,
+    email VARCHAR UNIQUE NOT NULL,
     user_password VARCHAR NOT NULL,
     signing_date DATE NOT NULL DEFAULT CURRENT_DATE
 );

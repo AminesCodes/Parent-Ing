@@ -5,13 +5,17 @@ import Logo from './Media/Parent-Ing_Logo.png'
 
 import LoginForm from './Components/LoginForm'
 
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+toast.configure();
+
 function App() {
   return (
     <div className="App">
       <div className="jumbotron bg-success text-white">
-        <div className="container-sm">
-          <img className='img-fluid' src={Logo} alt='app logo'/>
-          <h1>My App</h1>
+        <div className="container-sm mx-auto">
+          <img className='img-fluid d-sm-block mx-auto' src={Logo} alt='app logo'/>
+          <h1 className='text-center'>My App</h1>
         </div>
         <LoginForm />
       </div>
