@@ -113,7 +113,7 @@ export default class LoginFrom extends React.PureComponent {
         let spinner = false;
 
         if (this.state.loading) {
-            spinner = <div className="spinner-border" role="status">
+            spinner = <div className="spinner-border d-sm-block" role="status">
             <span className="sr-only">Loading...</span>
           </div>
         }
@@ -153,9 +153,7 @@ export default class LoginFrom extends React.PureComponent {
                 <div className='d-sm-flex justify-content-between'>
                     <button className='d-sm-block'>{this.state.formFunctionality[0]}</button>
                     {spinner}
-                    <div className='d-sm-block'>{this.state.formFunctionality[1]}
-                        <a href='#' onClick={this.handleSigninBtn}>{this.state.formFunctionality[2]}</a>
-                    </div>
+                    <button className='d-sm-block btn btn-link' onClick={this.handleSigninBtn}>{this.state.formFunctionality[1]}<strong>{this.state.formFunctionality[2]}</strong></button>
                 </div>
             </form>
         )
