@@ -11,23 +11,25 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 toast.configure();
 
+const pw = sessionStorage.getItem('Parent-Ing_App_KS')
+const uId = sessionStorage.getItem('Parent-Ing_App_UId')
+
 class App extends React.PureComponent {
   state = {
     loggedUser: '',
-    loggedPassword: '',
-    loggedIn: false,
   }
 
-  handleFormSubmit = async (user, password) => {
-    this.setState({
-      loggedUser: user,
-      loggedPassword: password,
-      loggedIn: true
-    })
+  handleFormSubmit = (user, password) => {
+    sessionStorage.setItem('Parent-Ing_App_KS', password);
+    sessionStorage.setItem('Parent-Ing_App_UId', user.id);
+    this.setState({loggedUser: user})
   }
 
   // ################## RENDER ###################
   render() {
+    const pw = sessionStorage.getItem('Parent-Ing_App_KS')
+    const uId = sessionStorage.getItem('Parent-Ing_App_UId')
+
     let pageContent = 
       <>
         <div className="jumbotron bg-appColor text-white">
@@ -40,8 +42,8 @@ class App extends React.PureComponent {
         <Intro />
       </>
 
-    if (this.state.loggedIn) {
-      pageContent = <Welcome />
+    if (pw && uId) {
+      pageContent = <Welcome user={this.state.loggedUser}/>
     }
 
     return (
