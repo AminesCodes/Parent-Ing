@@ -30,7 +30,7 @@ class App extends React.PureComponent {
   render() {
     let pageContent = 
       <>
-        <div className="jumbotron bg-success text-white">
+        <div className="jumbotron bg-appColor text-white">
           <div className="container-sm mx-auto">
             <img className='img-fluid d-sm-block mx-auto' src={Logo} alt='app logo'/>
             <h1 className='text-center'>My App</h1>

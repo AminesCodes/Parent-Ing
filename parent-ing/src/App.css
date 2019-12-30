@@ -2,6 +2,10 @@
   
 }
 
+.bg-appColor {
+  background-color: #6dc55a;
+}
+
 .form-group {
   position: relative;
   margin-bottom: 1.5rem;

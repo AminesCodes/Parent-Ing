@@ -36,7 +36,7 @@ export default class LoginFrom extends React.PureComponent {
     handleFormSubmit = async (event) => {
         event.preventDefault()
 
-        if (this.state.login) {
+        if (this.state.formFunctionality[0] === 'Login') {
             const user = {
                 email: this.state.email,
                 password: this.state.password
@@ -51,7 +51,7 @@ export default class LoginFrom extends React.PureComponent {
                 this.setState({loading: false})
                 handleNetworkErrors(err)
             }
-        } else {
+        } else if (this.state.formFunctionality[0] === 'Sign-in') {
             const user = { 
                 username: this.state.username, 
                 firstname: this.state.firstName, 
