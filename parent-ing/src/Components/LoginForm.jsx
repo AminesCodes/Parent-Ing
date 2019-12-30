@@ -25,13 +25,11 @@ export default class LoginFrom extends React.PureComponent {
     state = {
         email: '',
         password: '',
-        login: true,
         username: '',
         firstName: '',
         lastName: '',
         dob: '',
-        loggedUser: '',
-        loggedPassword: '',
+        formFunctionality: ['Login', 'New user? ', 'Sign-in'],
         loading: false,
     }
 
@@ -47,10 +45,8 @@ export default class LoginFrom extends React.PureComponent {
                 this.setState({loading: true})
                 const { data } = await Axios.patch('http://localhost:3129/users/login', user)
 
-                this.setState({
-                    loading: false,
-                    loggedUser: data.payload
-                })
+                this.setState({ loading: false })
+                this.props.formSubmit(data.payload, this.state.password)
             } catch (err) {
                 this.setState({loading: false})
                 handleNetworkErrors(err)
@@ -68,10 +64,8 @@ export default class LoginFrom extends React.PureComponent {
                 this.setState({loading: true})
                 const { data } = await Axios.post('http://localhost:3129/users/signup', user)
 
-                this.setState({
-                    loading: false,
-                    loggedUser: data.payload
-                })
+                this.setState({ loading: false })
+                this.props.formSubmit(data.payload, this.state.password)
             } catch (err) {
                 this.setState({loading: false})
                 handleNetworkErrors(err)
@@ -105,11 +99,12 @@ export default class LoginFrom extends React.PureComponent {
     }
 
     handleSigninBtn = () => {
-        this.setState({login: false})
-    }
+        if (this.state.formFunctionality[0] === 'Login'){
+            this.setState({formFunctionality: ['Sign-in', 'Already a user? ', 'Login']})
+        } else if (this.state.formFunctionality[0] === 'Sign-in') {
+            this.setState({formFunctionality: ['Login', 'New user? ', 'Sign-in']})
+        }
 
-    handleLoginBtn = () => {
-        this.setState({login: true})
     }
 
 
@@ -124,7 +119,7 @@ export default class LoginFrom extends React.PureComponent {
         }
         let signinFields = null;
 
-        if (!this.state.login) {
+        if (this.state.formFunctionality[0] === 'Sign-in') {
             signinFields = <>
                 <div className="form-group">
                     <input className='form-control' id='username' type='text' value={this.state.username} onChange={this.handleUsernameInput} required></input>
@@ -156,9 +151,11 @@ export default class LoginFrom extends React.PureComponent {
                 </div>
                 {signinFields}
                 <div className='d-sm-flex justify-content-between'>
-                    <button className='d-sm-block' onClick={this.handleLoginBtn}>Login</button>
+                    <button className='d-sm-block'>{this.state.formFunctionality[0]}</button>
                     {spinner}
-                    <button className='d-sm-block' onClick={this.handleSigninBtn}>Sign-in</button>
+                    <div className='d-sm-block'>{this.state.formFunctionality[1]}
+                        <a href='#' onClick={this.handleSigninBtn}>{this.state.formFunctionality[2]}</a>
+                    </div>
                 </div>
             </form>
         )
