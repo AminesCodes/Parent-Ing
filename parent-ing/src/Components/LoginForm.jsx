@@ -46,7 +46,7 @@ export default class LoginFrom extends React.PureComponent {
             try {
                 this.setState({loading: true})
                 const { data } = await Axios.patch('http://localhost:3129/users/login', user)
-                console.log(data)
+
                 this.setState({
                     loading: false,
                     loggedUser: data.payload
@@ -67,8 +67,11 @@ export default class LoginFrom extends React.PureComponent {
             try {
                 this.setState({loading: true})
                 const { data } = await Axios.post('http://localhost:3129/users/signup', user)
-                console.log(data)
-                this.setState({loading: false})
+
+                this.setState({
+                    loading: false,
+                    loggedUser: data.payload
+                })
             } catch (err) {
                 this.setState({loading: false})
                 handleNetworkErrors(err)

@@ -65,14 +65,14 @@ Router.get('/:username', async (request, response) => {
 
 // Login a registered user
 Router.patch('/login', async (request, response) => {
-    const { password, email } = request.body
-
+    let { password, email } = request.body
+    
     if (!password || !email) {
         response.status(400)
-            response.json({
-                status: 'failed',
-                message: 'Missing Information',
-            })
+        response.json({
+            status: 'failed',
+            message: 'Missing Information',
+        })
     } else {
         try {
             const userToLog = await Users.logUser(email, password)
@@ -117,12 +117,22 @@ Router.post('/signup', async (request, response) => {
                 payload: newUser,
             })
         } catch (err) {
-            console.log(err)
-            response.status(500)
-            response.json({
-                status: 'failed',
-                payload: null,
-            })
+            // Username already taken 
+            if (err.code === "23505" && err.detail.includes("already exists")) {
+                console.log('Attempt to register a new user with a taken email/username')
+                response.status(403)
+                response.json({
+                    status: 'failed',
+                    message: 'Username already taken AND/OR email address already registered',
+                })
+            } else {
+                console.log(err)
+                response.status(500)
+                response.json({
+                    status: 'failed',
+                    payload: null,
+                })
+            }
         }
     }
 })

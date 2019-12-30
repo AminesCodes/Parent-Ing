@@ -3,23 +3,25 @@ const DB = require('../Database/database');
 
 const createUser = async (user) => {
     try {
-      let insertQuery = `
+        let { username, firstname, lastname, dob, password, email } = user;
+
+        username = username.toLowerCase();
+        firstname = firstname.toLowerCase();
+        lastname = lastname.toLowerCase();
+        email = email.toLowerCase();
+
+      const insertQuery = `
         INSERT INTO users
             (username, firstname, lastname, dob, user_password, email)
         VALUES
             ($1, $2, $3, $4, $5, $6) 
-        RETURNING 
-            id, username, signing_date
+        RETURNING *
         `;
-      let newUser = await DB.one(insertQuery, [user.username, user.firstname, user.lastname, user.dob, user.password, user.email])
+      let newUser = await DB.one(insertQuery, [username, firstname, lastname, dob, password, email])
+      delete newUser.user_password
       return newUser;
     } catch (err) {
-      // Username already taken 
-      if (err.code === "23505" && err.detail.includes("already exists")) {
-        let customErr = "Username not available. Please try a different one.";
-        err = customErr;
-      }
-      throw err;
+        throw err;
     }
   }
 
@@ -130,6 +132,7 @@ const authentifyUser = async (userId, password) => {
 
 const logUser = async (email, password) => {
     try {
+        email = email.toLowerCase();
         const requestQuery = `
         Select * FROM users WHERE email = $1
         `
