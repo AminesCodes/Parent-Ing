@@ -5,7 +5,7 @@ import Logo from './Media/Parent-Ing_Logo.png'
 
 import LoginForm from './Components/LoginForm'
 import Intro from './Components/Intro'
-import Welcome from './Components/Welcome'
+import Routing from './Components/Routing'
 
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -23,6 +23,11 @@ class App extends React.PureComponent {
     sessionStorage.setItem('Parent-Ing_App_KS', password);
     sessionStorage.setItem('Parent-Ing_App_UId', user.id);
     this.setState({loggedUser: user})
+  }
+
+  handleLogOut = () => {
+    sessionStorage.clear();
+    this.setState({loggedUser: ''})
   }
 
   // ################## RENDER ###################
@@ -43,7 +48,7 @@ class App extends React.PureComponent {
       </>
 
     if (pw && uId) {
-      pageContent = <Welcome user={this.state.loggedUser}/>
+      pageContent = <Routing user={this.state.loggedUser} logout={this.handleLogOut}/>
     }
 
     return (
