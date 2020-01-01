@@ -41,12 +41,12 @@ export default class Welcome extends React.PureComponent {
                                 <Link className='nav-link mb-0 h6 text-dark' to='/account'>Account</Link>
                             </li>
                         </ul>
-                        <ul className='navbar-nav float-sm-right'>
-                            <li className='nav-item'>
-                                <Link className='nav-link mb-0 h6 text-dark' to='/logout'>Logout</Link>
-                            </li>
-                        </ul>
                     </div>
+                        <ul className='nav navbar-nav navbar-right'>
+                            <div className="btn-nav">
+                                <Link className='btn btn-secondary btn-small navbar-btn' to='/logout'>Logout</Link>
+                            </div>
+                        </ul>
                 </nav>
 
                 <Switch>
