@@ -22,16 +22,30 @@ const handleNetworkErrors = err => {
 }
 
 export default class Account extends React.PureComponent {
+    // state = {
+    //     username: this.props.user.username,
+    //     firstname: this.props.user.firstname,
+    //     lastname: this.props.user.lastname,
+    //     dob: this.props.user.dob,
+    //     email: this.props.user.email,
+    //     joiningDate: this.props.user.signing_date,
+    //     waitingForData: true
+    // }
     state = {
-        username: this.props.user.username,
-        firstname: this.props.user.firstname,
-        lastname: this.props.user.lastname,
-        dob: this.props.user.dob,
-        email: this.props.user.email,
+        username: '',
+        firstName: '',
+        lastName: '',
+        dob: '',
+        email: '',
+        joiningDate: '',
+        oldPassword: '',
+        newPassword: '',
+        newPasswordConfirmation: '',
         waitingForData: true
     }
 
     async componentDidMount() {
+        console.log('user from props: ', this.props.user)
         const username = this.props.match.params.username
         if (username !== 'undefined') {
             try {
@@ -39,10 +53,11 @@ export default class Account extends React.PureComponent {
                 console.log(data)
                 this.setState({
                     username: data.payload.username,
-                    firstname: data.payload.firstname,
-                    lastname: data.payload.lastname,
-                    dob: data.payload.dob,
+                    firstName: data.payload.firstname,
+                    lastName: data.payload.lastname,
+                    dob: (data.payload.dob).slice(0, 10),
                     email: data.payload.email,
+                    joiningDate: (data.payload.signing_date).slice(0, 10),
                     waitingForData: false
                 })
             } catch (err) {
@@ -55,19 +70,13 @@ export default class Account extends React.PureComponent {
     // ############ RENDER ############
     render() {
         let content =
-            <div className="spinner-border d-sm-block" role="status">
-                <span className="sr-only">Loading...</span>
+            <div className="spinner-border m-5" role="status">
+                <span className="sr-only  text-center">Loading...</span>
             </div>
 
         if (!this.state.waitingForData) {
-            content = null
-                
-        }
-
-        return (
-            <div className='container'>
-                {content}
-
+            content = 
+            <>
                 <nav>
                     <div className="nav nav-tabs" id="nav-tab" role="tablist">
                         <a className="nav-item nav-link active" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="true">Profile</a>
@@ -100,7 +109,7 @@ export default class Account extends React.PureComponent {
                             </div>
                             <div className="form-group col-md-6">
                                 <label className='' htmlFor='joiningDate'>Member since: </label>
-                                <input className='form-control right-text' id='joiningDate' type='date' value={this.state.dob} disabled></input>
+                                <input className='form-control right-text' id='joiningDate' type='date' value={this.state.joiningDate} disabled></input>
                             </div>
                             <div className='d-sm-block col-md-12'>
                                 <button className='d-lg-block'>Update Information</button>
@@ -127,6 +136,15 @@ export default class Account extends React.PureComponent {
                         </form>
                     </div>
                 </div>
+            </>
+                
+        }
+
+        return (
+            <div className='container'>
+                {content}
+
+                
             </div>
         )
     }
