@@ -45,12 +45,10 @@ export default class Account extends React.PureComponent {
     }
 
     async componentDidMount() {
-        console.log('user from props: ', this.props.user)
         const username = this.props.match.params.username
         if (username !== 'undefined') {
             try {
                 const { data } = await Axios.get(`http://localhost:3129/users/${username}`)
-                console.log(data)
                 this.setState({
                     username: data.payload.username,
                     firstName: data.payload.firstname,
@@ -66,6 +64,49 @@ export default class Account extends React.PureComponent {
             }
         }
     }
+
+    handleFormSubmit = async (event) => {
+        event.preventDefault()
+
+    }
+
+    handlePasswordForm = async (event) => {
+        event.preventDefault()
+
+    }
+
+    handleEmailInput = event => {
+        this.setState({email: event.target.value})
+    }
+
+    handleUsernameInput = event => {
+        this.setState({username: event.target.value})
+    }
+
+    handleFirstNameInput = event => {
+        this.setState({firstName: event.target.value})
+    }
+
+    handleLastNameInput = event => {
+        this.setState({lastName: event.target.value})
+    }
+
+    handleDobInput = event => {
+        this.setState({dob: event.target.value})
+    }
+
+    handleOldPasswordInput = event => {
+        this.setState({oldPassword: event.target.value})
+    }
+
+    handleNewPasswordInput = event => {
+        this.setState({newPassword: event.target.value})
+    }
+
+    handleNewPasswordConfirmInput = event => {
+        this.setState({newPasswordConfirmation: event.target.value})
+    }
+
 
     // ############ RENDER ############
     render() {
@@ -87,50 +128,50 @@ export default class Account extends React.PureComponent {
                 <div className="tab-content" id="nav-tabContent">
                     <div className="tab-pane fade show active" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
                         <form className='form-row was-validated' onSubmit={this.handleFormSubmit}>
-                            <div className="form-group col-md-6">
+                            <div className="form-group col-sm-6">
                                 <label className='' htmlFor='email'>Email address: </label>
                                 <input className='form-control' id='email' type='email' value={this.state.email} onChange={this.handleEmailInput} required></input>
                             </div>
-                            <div className="form-group col-md-6">
+                            <div className="form-group col-sm-6">
                                 <label className='' htmlFor='username'>Username: </label>
                                 <input className='form-control' id='username' type='text' value={this.state.username} onChange={this.handleUsernameInput} required></input>
                             </div>
-                            <div className="form-group col-md-6">
+                            <div className="form-group col-sm-6">
                                 <label className='' htmlFor='firstname'>First name: </label>
                                 <input className='form-control' id='firstname' type='text' value={this.state.firstName} onChange={this.handleFirstNameInput} required></input>
                             </div>
-                            <div className="form-group col-md-6">
+                            <div className="form-group col-sm-6">
                                 <label className='' htmlFor='lastname'>Last name: </label>
                                 <input className='form-control' id='lastname' type='text' value={this.state.lastName} onChange={this.handleLastNameInput} required></input>
                             </div>
-                            <div className="form-group col-md-6">
+                            <div className="form-group col-sm-6">
                                 <label className='' htmlFor='dob'>Date of birth</label>
-                                <input className='form-control right-text' id='dob' type='date' value={this.state.dob} onChange={this.handleDobInput} required></input>
+                                <input className='form-control' id='dob' type='date' value={this.state.dob} onChange={this.handleDobInput} required></input>
                             </div>
-                            <div className="form-group col-md-6">
+                            <div className="form-group col-sm-6">
                                 <label className='' htmlFor='joiningDate'>Member since: </label>
-                                <input className='form-control right-text' id='joiningDate' type='date' value={this.state.joiningDate} disabled></input>
+                                <input className='form-control' id='joiningDate' type='date' value={this.state.joiningDate} disabled></input>
                             </div>
-                            <div className='d-sm-block col-md-12'>
+                            <div className='d-sm-block col-sm-12'>
                                 <button className='d-lg-block'>Update Information</button>
                             </div>
                         </form>
                     </div>
                     <div className="tab-pane fade" id="nav-password" role="tabpanel" aria-labelledby="nav-password-tab">
-                        <form className='form-row was-validated' onSubmit={this.handleFormSubmit}>
-                            <div className="form-group col-md-12">
+                        <form className='form-row was-validated' onSubmit={this.handlePasswordForm}>
+                            <div className="form-group col-sm-12">
                                 <label className='' htmlFor='password'>Old Password: </label>
-                                <input className='form-control' id='password' type='password' value={this.state.email} onChange={this.handleEmailInput} required></input>
+                                <input className='form-control' id='password' type='password' value={this.state.oldPassword} onChange={this.handleOldPasswordInput} required></input>
                             </div>
-                            <div className="form-group col-md-6">
+                            <div className="form-group col-sm-6">
                                 <label className='' htmlFor='newPassword'>New Password: </label>
-                                <input className='form-control' id='newPassword' type='password' value={this.state.email} onChange={this.handleEmailInput} required></input>
+                                <input className='form-control' id='newPassword' type='password' value={this.state.newPassword} onChange={this.handleNewPasswordInput} required></input>
                             </div>
-                            <div className="form-group col-md-6">
+                            <div className="form-group col-sm-6">
                                 <label className='' htmlFor='newPasswordConfirmation'>Confirm Password: </label>
-                                <input className='form-control' id='newPasswordConfirmation' type='password' value={this.state.email} onChange={this.handleEmailInput} required></input>
+                                <input className='form-control' id='newPasswordConfirmation' type='password' value={this.state.newPasswordConfirmation} onChange={this.handleNewPasswordConfirmInput} required></input>
                             </div>
-                            <div className='d-sm-block col-md-12'>
+                            <div className='d-sm-block col-sm-12'>
                                 <button className='d-lg-block'>Update Information</button>
                             </div>
                         </form>
