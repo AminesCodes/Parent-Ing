@@ -8,14 +8,14 @@ import 'react-toastify/dist/ReactToastify.css';
 const handleNetworkErrors = err => {
     if (err.response) {
         if (err.response.data.message) {
-            toast.error(err.response.data.message, 
+            toast.error(err.response.data.message,
                 { position: toast.POSITION.TOP_CENTER });
         }
     } else if (err.message) {
-        toast.error(err.message, 
+        toast.error(err.message,
             { position: toast.POSITION.TOP_CENTER });
     } else {
-        toast.error('Sorry, an error occured, try again later', 
+        toast.error('Sorry, an error occured, try again later',
             { position: toast.POSITION.TOP_CENTER });
         console.log('Error', err);
     }
@@ -23,6 +23,11 @@ const handleNetworkErrors = err => {
 
 export default class Account extends React.PureComponent {
     state = {
+        username: this.props.user.username,
+        firstname: this.props.user.firstname,
+        lastname: this.props.user.lastname,
+        dob: this.props.user.dob,
+        email: this.props.user.email,
         waitingForData: true
     }
 
@@ -32,9 +37,16 @@ export default class Account extends React.PureComponent {
             try {
                 const { data } = await Axios.get(`http://localhost:3129/users/${username}`)
                 console.log(data)
-                this.setState({waitingForData: false})
+                this.setState({
+                    username: data.payload.username,
+                    firstname: data.payload.firstname,
+                    lastname: data.payload.lastname,
+                    dob: data.payload.dob,
+                    email: data.payload.email,
+                    waitingForData: false
+                })
             } catch (err) {
-                this.setState({waitingForData: false})
+                this.setState({ waitingForData: false })
                 handleNetworkErrors(err)
             }
         }
@@ -42,15 +54,80 @@ export default class Account extends React.PureComponent {
 
     // ############ RENDER ############
     render() {
-        let spinner = null;
-        if (this.state.waitingForData) {
-            spinner = <div className="spinner-border d-sm-block" role="status">
-            <span className="sr-only">Loading...</span>
-          </div>
+        let content =
+            <div className="spinner-border d-sm-block" role="status">
+                <span className="sr-only">Loading...</span>
+            </div>
+
+        if (!this.state.waitingForData) {
+            content = null
+                
         }
 
         return (
-            <div>Account {spinner}</div>
+            <div className='container'>
+                {content}
+
+                <nav>
+                    <div className="nav nav-tabs" id="nav-tab" role="tablist">
+                        <a className="nav-item nav-link active" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="true">Profile</a>
+                        <a className="nav-item nav-link" id="nav-password-tab" data-toggle="tab" href="#nav-password" role="tab" aria-controls="nav-password" aria-selected="false">Update Password</a>
+                    </div>
+                </nav>
+
+                <div className="tab-content" id="nav-tabContent">
+                    <div className="tab-pane fade show active" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                        <form className='form-row was-validated' onSubmit={this.handleFormSubmit}>
+                            <div className="form-group col-md-6">
+                                <label className='' htmlFor='email'>Email address: </label>
+                                <input className='form-control' id='email' type='email' value={this.state.email} onChange={this.handleEmailInput} required></input>
+                            </div>
+                            <div className="form-group col-md-6">
+                                <label className='' htmlFor='username'>Username: </label>
+                                <input className='form-control' id='username' type='text' value={this.state.username} onChange={this.handleUsernameInput} required></input>
+                            </div>
+                            <div className="form-group col-md-6">
+                                <label className='' htmlFor='firstname'>First name: </label>
+                                <input className='form-control' id='firstname' type='text' value={this.state.firstName} onChange={this.handleFirstNameInput} required></input>
+                            </div>
+                            <div className="form-group col-md-6">
+                                <label className='' htmlFor='lastname'>Last name: </label>
+                                <input className='form-control' id='lastname' type='text' value={this.state.lastName} onChange={this.handleLastNameInput} required></input>
+                            </div>
+                            <div className="form-group col-md-6">
+                                <label className='' htmlFor='dob'>Date of birth</label>
+                                <input className='form-control right-text' id='dob' type='date' value={this.state.dob} onChange={this.handleDobInput} required></input>
+                            </div>
+                            <div className="form-group col-md-6">
+                                <label className='' htmlFor='joiningDate'>Member since: </label>
+                                <input className='form-control right-text' id='joiningDate' type='date' value={this.state.dob} disabled></input>
+                            </div>
+                            <div className='d-sm-block col-md-12'>
+                                <button className='d-lg-block'>Update Information</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div className="tab-pane fade" id="nav-password" role="tabpanel" aria-labelledby="nav-password-tab">
+                        <form className='form-row was-validated' onSubmit={this.handleFormSubmit}>
+                            <div className="form-group col-md-12">
+                                <label className='' htmlFor='password'>Old Password: </label>
+                                <input className='form-control' id='password' type='password' value={this.state.email} onChange={this.handleEmailInput} required></input>
+                            </div>
+                            <div className="form-group col-md-6">
+                                <label className='' htmlFor='newPassword'>New Password: </label>
+                                <input className='form-control' id='newPassword' type='password' value={this.state.email} onChange={this.handleEmailInput} required></input>
+                            </div>
+                            <div className="form-group col-md-6">
+                                <label className='' htmlFor='newPasswordConfirmation'>Confirm Password: </label>
+                                <input className='form-control' id='newPasswordConfirmation' type='password' value={this.state.email} onChange={this.handleEmailInput} required></input>
+                            </div>
+                            <div className='d-sm-block col-md-12'>
+                                <button className='d-lg-block'>Update Information</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         )
     }
 }
