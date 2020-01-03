@@ -11,8 +11,6 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 toast.configure();
 
-const pw = sessionStorage.getItem('Parent-Ing_App_KS')
-const uId = sessionStorage.getItem('Parent-Ing_App_UId')
 
 class App extends React.PureComponent {
   state = {
@@ -27,7 +25,7 @@ class App extends React.PureComponent {
 
   handleLogOut = () => {
     sessionStorage.clear();
-    this.setState({loggedUser: ''})
+    this.setState({loggedUser: null})
   }
 
   // ################## RENDER ###################

@@ -111,15 +111,14 @@ export default class LoginFrom extends React.PureComponent {
 
     //################# RENDER ################
     render() {
-        let spinner = false;
-
+        let spinner = null;
         if (this.state.loading) {
             spinner = <div className="spinner-border d-sm-block" role="status">
             <span className="sr-only">Loading...</span>
           </div>
         }
-        let signinFields = null;
 
+        let signinFields = null;
         if (this.state.formFunctionality[0] === 'Sign-in') {
             signinFields = <>
                 <div className="form-group">

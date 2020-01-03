@@ -14,9 +14,10 @@ export default class Welcome extends React.PureComponent {
 
     //################ RENDER ###########
     render() {
+        console.log(this.props)
         return (
             <>
-                <nav className='navbar navbar-expand-sm bg-appColor'>
+                <nav className='navbar navbar-expand-md navbar-light bg-appColor'>
                     <Link className='navbar-brand' to='/'>
                         <img className='img-fluid' src={Logo} alt='app logo' width='130px' />
                     </Link>
@@ -29,33 +30,35 @@ export default class Welcome extends React.PureComponent {
                                 <Link className='nav-link mb-0 h6 text-dark' to='/'>Home</Link>
                             </li>
                             <li className='nav-item'>
-                                <Link className='nav-link mb-0 h6 text-dark' to='/posts'>My Posts</Link>
+                                <Link className='nav-link mb-0 h6 text-dark' to={`/${this.props.user.username}/posts`}>My Posts</Link>
                             </li>
                             <li className='nav-item'>
-                                <Link className='nav-link mb-0 h6 text-dark' to='/pictures'>My Pics</Link>
+                                <Link className='nav-link mb-0 h6 text-dark' to={`/${this.props.user.username}/pictures`}>My Pics</Link>
                             </li>
                             <li className='nav-item'>
-                                <Link className='nav-link mb-0 h6 text-dark' to='/likes'>My Likes</Link>
+                                <Link className='nav-link mb-0 h6 text-dark' to={`/${this.props.user.username}/likes`}>My Likes</Link>
                             </li>
                             <li className='nav-item'>
-                                <Link className='nav-link mb-0 h6 text-dark' to='/account'>Account</Link>
+                                <Link className='nav-link mb-0 h6 text-dark' to={`/${this.props.user.username}/account`}>Account</Link>
                             </li>
+                        <li className='navbar-nav float-right'>
+                            <div className='btn-nav float-right'>
+                                <Link className='btn btn-secondary btn-small navbar-btn' to='/' onClick={this.props.logout}>Logout</Link>
+                            </div>
+                        </li>
                         </ul>
                     </div>
-                        <ul className='nav navbar-nav navbar-right'>
-                            <div className="btn-nav">
-                                <Link className='btn btn-secondary btn-small navbar-btn' to='/logout'>Logout</Link>
-                            </div>
-                        </ul>
                 </nav>
 
                 <Switch>
                     <Route exact path='/' component={Home} />
-                    <Route path='/posts' component={Posts} />
-                    <Route path='/pictures' component={Pictures} />
-                    <Route path='/likes' component={Likes} />
-                    <Route path='/account' component={Account} />
-                    <Route path='/logout' component={Home} />
+                    <Route path={`/:username/posts`} render={props => (<Posts user={this.props.user} {...props} /> )} />
+                    <Route path={`/:username/pictures`} render={props => (<Pictures user={this.props.user} {...props} /> )} />
+                    <Route path={`/:username/likes`} render={props => (<Likes user={this.props.user} {...props} /> )} />
+                    <Route path={`/:username/account`} render={props => (<Account user={this.props.user} {...props} /> )} />
+                    {/* <Route path={`/:username/pictures`} component={Pictures} />
+                    <Route path={`/:username/likes`} component={Likes} />
+                    <Route path={`/:username/account`} component={Account} /> */}
                     {/* <Route exact component={ErrorNotFound} /> */}
                 </Switch>
             </>
