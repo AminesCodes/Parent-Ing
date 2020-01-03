@@ -113,27 +113,27 @@ export default class LoginFrom extends React.PureComponent {
     render() {
         let spinner = null;
         if (this.state.loading) {
-            spinner = <div className="spinner-border d-sm-block" role="status">
-            <span className="sr-only">Loading...</span>
+            spinner = <div className='spinner-border d-sm-block' role='status'>
+            <span className='sr-only'>Loading...</span>
           </div>
         }
 
         let signinFields = null;
         if (this.state.formFunctionality[0] === 'Sign-in') {
             signinFields = <>
-                <div className="form-group">
+                <div className='form-group'>
                     <input className='form-control' id='username' type='text' value={this.state.username} onChange={this.handleUsernameInput} required></input>
                     <label className='ph-area' htmlFor='username'>Username: </label>
                 </div>
-                <div className="form-group">
+                <div className='form-group'>
                     <input className='form-control' id='firstname' type='text' value={this.state.firstName} onChange={this.handleFirstNameInput} required></input>
                     <label className='ph-area' htmlFor='firstname'>First name: </label>
                 </div>
-                <div className="form-group">
+                <div className='form-group'>
                     <input className='form-control' id='lastname' type='text' value={this.state.lastName} onChange={this.handleLastNameInput} required></input>
                     <label className='ph-area' htmlFor='lastname'>Last name: </label>
                 </div>
-                <div className="form-group">
+                <div className='form-group'>
                     <input className='form-control right-text' id='dob' type='date' value={this.state.dob} onChange={this.handleDobInput} required></input>
                     <label className='ph-area' htmlFor='dob'>Date of birth</label>
                 </div>
@@ -141,12 +141,12 @@ export default class LoginFrom extends React.PureComponent {
         }
         return(
             <form className='was-validated' onSubmit={this.handleFormSubmit}>
-                <div className="form-group">
+                <div className='form-group'>
                     <input className='form-control' id='email' type='email' value={this.state.email} onChange={this.handleEmailInput} required></input>
                     <label className='ph-area' htmlFor='email'>Email address: </label>
                 </div>
-                <div className="form-group">
-                    <input className='form-control' id='password' type='password' value={this.state.password} onChange={this.handlePasswordInput} required></input>
+                <div className='form-group'>
+                    <input className='form-control' id='password' type='password' autoComplete='off' value={this.state.password} onChange={this.handlePasswordInput} required></input>
                     <label className='ph-area' htmlFor='password'>password: </label>
                 </div>
                 {signinFields}
