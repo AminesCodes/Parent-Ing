@@ -149,6 +149,7 @@ Router.put('/:userId', async (request, response) => {
             })
     } else {
         try {
+            console.log(password)
             const authorizedToUpdate = await Users.authentifyUser(userId, password)
 
             if (authorizedToUpdate) {
@@ -167,6 +168,7 @@ Router.put('/:userId', async (request, response) => {
                     })
                 }
             } else {
+                console.log('Authentication issue')
                 response.status(500)
                 response.json({
                     status: 'failed',

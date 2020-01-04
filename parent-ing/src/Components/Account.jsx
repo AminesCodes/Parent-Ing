@@ -22,16 +22,8 @@ const handleNetworkErrors = err => {
 }
 
 export default class Account extends React.PureComponent {
-    // state = {
-    //     username: this.props.user.username,
-    //     firstname: this.props.user.firstname,
-    //     lastname: this.props.user.lastname,
-    //     dob: this.props.user.dob,
-    //     email: this.props.user.email,
-    //     joiningDate: this.props.user.signing_date,
-    //     waitingForData: true
-    // }
     state = {
+        id: '',
         username: '',
         firstName: '',
         lastName: '',
@@ -50,6 +42,7 @@ export default class Account extends React.PureComponent {
             try {
                 const { data } = await Axios.get(`http://localhost:3129/users/${username}`)
                 this.setState({
+                    id: data.payload.id,
                     username: data.payload.username,
                     firstName: data.payload.firstname,
                     lastName: data.payload.lastname,
@@ -62,12 +55,40 @@ export default class Account extends React.PureComponent {
                 this.setState({ waitingForData: false })
                 handleNetworkErrors(err)
             }
+        } else {
+            toast.error('Login issue, please login into your account again',
+                { position: toast.POSITION.TOP_CENTER });
         }
     }
 
     handleFormSubmit = async (event) => {
         event.preventDefault()
+        const {id, username, firstName, lastName, dob, email} = this.state
+        
+        if (id && username && firstName && lastName && dob && email) {
+            try {
+                console.log(sessionStorage.getItem('Parent-Ing_App_KS'))
+                this.setState({ waitingForData: true })
+                const userInfo = { 
+                    username: username, 
+                    firstname: firstName, 
+                    lastname: lastName, 
+                    dob: dob, 
+                    password: sessionStorage.getItem('Parent-Ing_App_KS'), 
+                    email: email
+                }
 
+                const { data } = await Axios.put(`http://localhost:3129/users/${id}`, userInfo)
+                console.log(data)
+                this.setState({ waitingForData: false })
+            } catch (err) {
+                this.setState({ waitingForData: false })
+                handleNetworkErrors(err)
+            }
+        } else {
+            toast.error('Missing information, All fields are required',
+                { position: toast.POSITION.TOP_CENTER });
+        }
     }
 
     handlePasswordForm = async (event) => {

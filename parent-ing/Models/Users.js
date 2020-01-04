@@ -120,8 +120,8 @@ const authentifyUser = async (userId, password) => {
         const requestQuery = `
         Select user_password FROM users WHERE id = $1
         `
-        const registeredPassword = await DB.one(requestQuery, userId)
-        if (password === registeredPassword) {
+        const targetUser = await DB.one(requestQuery, userId)
+        if (password === targetUser.user_password) {
             return true
         }
         return false
