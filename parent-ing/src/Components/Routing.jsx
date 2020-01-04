@@ -7,6 +7,7 @@ import Posts from './Posts'
 import Pictures from './Pictures'
 import Likes from './Likes'
 import Account from './Account'
+import ErrorNotFound from './ErrorNotFound'
 
 export default class Welcome extends React.PureComponent {
 
@@ -14,7 +15,10 @@ export default class Welcome extends React.PureComponent {
 
     //################ RENDER ###########
     render() {
-        console.log(this.props)
+        const pw = sessionStorage.getItem('Parent-Ing_App_KS')
+        const uId = sessionStorage.getItem('Parent-Ing_App_UId')
+        const username = sessionStorage.getItem('Parent-Ing_App_Un')
+
         return (
             <>
                 <nav className='navbar navbar-expand-md navbar-light bg-appColor'>
@@ -30,16 +34,16 @@ export default class Welcome extends React.PureComponent {
                                 <Link className='nav-link mb-0 h6 text-dark' to='/'>Home</Link>
                             </li>
                             <li className='nav-item'>
-                                <Link className='nav-link mb-0 h6 text-dark' to={`/${this.props.user.username}/posts`}>My Posts</Link>
+                                <Link className='nav-link mb-0 h6 text-dark' to={`/${username}/posts`}>My Posts</Link>
                             </li>
                             <li className='nav-item'>
-                                <Link className='nav-link mb-0 h6 text-dark' to={`/${this.props.user.username}/pictures`}>My Pics</Link>
+                                <Link className='nav-link mb-0 h6 text-dark' to={`/${username}/pictures`}>My Pics</Link>
                             </li>
                             <li className='nav-item'>
-                                <Link className='nav-link mb-0 h6 text-dark' to={`/${this.props.user.username}/likes`}>My Likes</Link>
+                                <Link className='nav-link mb-0 h6 text-dark' to={`/${username}/likes`}>My Likes</Link>
                             </li>
                             <li className='nav-item'>
-                                <Link className='nav-link mb-0 h6 text-dark' to={`/${this.props.user.username}/account`}>Account</Link>
+                                <Link className='nav-link mb-0 h6 text-dark' to={`/${username}/account`}>Account</Link>
                             </li>
                         <li className='navbar-nav float-right'>
                             <div className='btn-nav float-right'>
@@ -52,14 +56,15 @@ export default class Welcome extends React.PureComponent {
 
                 <Switch>
                     <Route exact path='/' component={Home} />
-                    <Route path={`/:username/posts`} render={props => (<Posts user={this.props.user} {...props} /> )} />
-                    <Route path={`/:username/pictures`} render={props => (<Pictures user={this.props.user} {...props} /> )} />
-                    <Route path={`/:username/likes`} render={props => (<Likes user={this.props.user} {...props} /> )} />
-                    <Route path={`/:username/account`} render={props => (<Account user={this.props.user} {...props} /> )} />
+                    <Route path={`/undefined/:page`} component={ErrorNotFound} />
+                    <Route path={`/:username/posts`} render={props => (<Posts username={username} {...props} /> )} />
+                    <Route path={`/:username/pictures`} render={props => (<Pictures username={username} {...props} /> )} />
+                    <Route path={`/:username/likes`} render={props => (<Likes username={username} {...props} /> )} />
+                    <Route path={`/:username/account`} render={props => (<Account username={username} {...props} /> )} />
                     {/* <Route path={`/:username/pictures`} component={Pictures} />
                     <Route path={`/:username/likes`} component={Likes} />
                     <Route path={`/:username/account`} component={Account} /> */}
-                    {/* <Route exact component={ErrorNotFound} /> */}
+                    <Route exact component={ErrorNotFound} />
                 </Switch>
             </>
         )

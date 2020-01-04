@@ -16,7 +16,7 @@ Router.get('/all', async (request, response) => {
         response.status(500)
         response.json({
             status: 'failed',
-            payload: null,
+            message: 'Sorry, Something Went Wrong (BE)',
         })
     }
 })
@@ -41,7 +41,7 @@ Router.get('/:username', async (request, response) => {
             response.status(500)
             response.json({
                 status: 'failed',
-                payload: null,
+                message: 'Sorry, Something Went Wrong (BE)',
             })
         }
     } else {
@@ -56,7 +56,7 @@ Router.get('/:username', async (request, response) => {
             response.status(500)
             response.json({
                 status: 'failed',
-                payload: null,
+                message: 'Sorry, Something Went Wrong (BE)',
             })
         }
     }
@@ -130,7 +130,7 @@ Router.post('/signup', async (request, response) => {
                 response.status(500)
                 response.json({
                     status: 'failed',
-                    payload: null,
+                    message: 'Sorry, Something Went Wrong (BE)',
                 })
             }
         }
@@ -141,15 +141,14 @@ Router.put('/:userId', async (request, response) => {
     const userId = request.params.userId;
     const { username, firstname, lastname, dob, password, email } = request.body
 
-    if (!username || !firstname || !lastname || !dob || !password || !email) {
+    if (username === 'undefined' || !username || !firstname || !lastname || !dob || !password || !email) {
         response.status(400)
             response.json({
                 status: 'failed',
-                message: 'Missing Information',
+                message: 'Missing Information or invalid username',
             })
     } else {
         try {
-            console.log(password)
             const authorizedToUpdate = await Users.authentifyUser(userId, password)
 
             if (authorizedToUpdate) {
@@ -164,15 +163,15 @@ Router.put('/:userId', async (request, response) => {
                     response.status(500)
                     response.json({
                         status: 'failed',
-                        payload: null,
+                        message: 'Sorry, Something Went Wrong (BE)',
                     })
                 }
             } else {
                 console.log('Authentication issue')
-                response.status(500)
+                response.status(401)
                 response.json({
                     status: 'failed',
-                    payload: null,
+                    message: 'Authentication issue'
                 })
             }
         } catch (err) {
@@ -180,7 +179,7 @@ Router.put('/:userId', async (request, response) => {
             response.status(500)
             response.json({
                 status: 'failed',
-                payload: null,
+                message: 'Sorry, Something Went Wrong (BE)',
             })
         }
     }
@@ -191,7 +190,7 @@ Router.patch('/:userId/password', async (request, response) => {
     const userId = request.params.userId;
     const { oldPassword, newPassword, confirmedPassword } = request.body
 
-    if (!oldPassword || !newPassword || !confirmedPassword ||newPassword !== confirmedPassword) {
+    if (!oldPassword || !newPassword || !confirmedPassword || newPassword !== confirmedPassword) {
         response.status(400)
             response.json({
                 status: 'failed',
@@ -203,7 +202,7 @@ Router.patch('/:userId/password', async (request, response) => {
 
             if (authorizedToUpdate) {
                 try {
-                    const updatedUser = await Users.updateUserInfo(userId, newPassword)
+                    const updatedUser = await Users.updateUserPassword(userId, newPassword)
                     response.json({
                         status: 'success',
                         payload: updatedUser,
@@ -213,14 +212,15 @@ Router.patch('/:userId/password', async (request, response) => {
                     response.status(500)
                     response.json({
                         status: 'failed',
-                        payload: null,
+                        message: 'Sorry, Something Went Wrong (BE)',
                     })
                 }
             } else {
-                response.status(500)
+                console.log('Authentication issue')
+                response.status(401)
                 response.json({
                     status: 'failed',
-                    payload: null,
+                    message: 'Authentication issue'
                 })
             }
         } catch (err) {
@@ -228,7 +228,7 @@ Router.patch('/:userId/password', async (request, response) => {
             response.status(500)
             response.json({
                 status: 'failed',
-                payload: null,
+                message: 'Sorry, Something Went Wrong (BE)',
             })
         }
     }
@@ -261,14 +261,15 @@ Router.patch('/:userId/delete', async (request, response) => {
                     response.status(500)
                     response.json({
                         status: 'failed',
-                        payload: null,
+                        message: 'Sorry, Something Went Wrong (BE)',
                     })
                 }
             } else {
-                response.status(500)
+                console.log('Authentication issue')
+                response.status(401)
                 response.json({
                     status: 'failed',
-                    payload: null,
+                    message: 'Authentication issue'
                 })
             }
         } catch (err) {
@@ -276,7 +277,7 @@ Router.patch('/:userId/delete', async (request, response) => {
             response.status(500)
             response.json({
                 status: 'failed',
-                payload: null,
+                message: 'Sorry, Something Went Wrong (BE)',
             })
         }
     }

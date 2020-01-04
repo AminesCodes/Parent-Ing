@@ -1,13 +1,29 @@
 const DB = require('../Database/database');
 // const { DB } = require('../Database/database');
 
+const formatStringInputs = (str) => {
+    str = str.trim()
+    const arr = str.split(' ')
+    let outputStr = '';
+    for (let word of arr) {
+        if (word && typeof word === 'string' && word !== ' ') {
+            outputStr += word[0].toUpperCase() + (word.slice(1, word.length)).toLowerCase() + ' ';
+        }
+    }
+    if (outputStr) {
+        return outputStr;
+    }
+    return str;
+}
+
+
 const createUser = async (user) => {
     try {
         let { username, firstname, lastname, dob, password, email } = user;
 
         username = username.toLowerCase();
-        firstname = firstname.toLowerCase();
-        lastname = lastname.toLowerCase();
+        firstname = formatStringInputs(firstname);
+        lastname = formatStringInputs(lastname);
         email = email.toLowerCase();
 
       const insertQuery = `
@@ -74,13 +90,18 @@ const getAllUsers = async () => {
 
 const updateUserInfo = async (userId, user) => {
     try {
+        let { username, firstname, lastname, dob, email } = user;
+        username = username.toLowerCase();
+        firstname = formatStringInputs(firstname);
+        lastname = formatStringInputs(lastname);
+        email = email.toLowerCase();
 
         const updateQuery = `UPDATE users 
         SET username=$1, firstname=$2, lastname=$3, dob=$4, email=$5
         WHERE id = $6 
         RETURNING id, username, firstname, lastname, dob, email, signing_date
         `
-        const updatedUser = await DB.one(updateQuery, [user.username, user.firstname, user.lastname, user.dob, user.email, userId])
+        const updatedUser = await DB.one(updateQuery, [username, firstname, lastname, dob, email, userId])
         return updatedUser;
     } catch (err) {
         throw err;

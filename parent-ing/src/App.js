@@ -20,6 +20,7 @@ class App extends React.PureComponent {
   handleFormSubmit = (user, password) => {
     sessionStorage.setItem('Parent-Ing_App_KS', password);
     sessionStorage.setItem('Parent-Ing_App_UId', user.id);
+    sessionStorage.setItem('Parent-Ing_App_Un', user.username)
     this.setState({loggedUser: user})
   }
 
@@ -32,6 +33,7 @@ class App extends React.PureComponent {
   render() {
     const pw = sessionStorage.getItem('Parent-Ing_App_KS')
     const uId = sessionStorage.getItem('Parent-Ing_App_UId')
+    const un = sessionStorage.getItem('Parent-Ing_App_Un')
 
     let pageContent = 
       <>
@@ -42,11 +44,11 @@ class App extends React.PureComponent {
           </div>
           <LoginForm formSubmit={this.handleFormSubmit}/>
         </div>
-        <Intro />
+        <Intro className='container-sm'/>
       </>
 
-    if (pw && uId) {
-      pageContent = <Routing user={this.state.loggedUser} logout={this.handleLogOut}/>
+    if (pw && uId && un) {
+      pageContent = <Routing logout={this.handleLogOut}/>
     }
 
     return (

@@ -38,6 +38,7 @@ export default class Account extends React.PureComponent {
 
     async componentDidMount() {
         const username = this.props.match.params.username
+
         if (username !== 'undefined') {
             try {
                 const { data } = await Axios.get(`http://localhost:3129/users/${username}`)
@@ -63,24 +64,32 @@ export default class Account extends React.PureComponent {
 
     handleFormSubmit = async (event) => {
         event.preventDefault()
-        const {id, username, firstName, lastName, dob, email} = this.state
+        const {id, username, firstName, lastName, dob, email, oldPassword} = this.state
         
-        if (id && username && firstName && lastName && dob && email) {
+        if (id && username && firstName && lastName && dob && email && oldPassword) {
             try {
-                console.log(sessionStorage.getItem('Parent-Ing_App_KS'))
                 this.setState({ waitingForData: true })
                 const userInfo = { 
                     username: username, 
                     firstname: firstName, 
                     lastname: lastName, 
                     dob: dob, 
-                    password: sessionStorage.getItem('Parent-Ing_App_KS'), 
+                    password: oldPassword, 
                     email: email
                 }
 
                 const { data } = await Axios.put(`http://localhost:3129/users/${id}`, userInfo)
                 console.log(data)
-                this.setState({ waitingForData: false })
+                this.setState({
+                    username: data.payload.username,
+                    firstName: data.payload.firstname,
+                    lastName: data.payload.lastname,
+                    dob: (data.payload.dob).slice(0, 10),
+                    email: data.payload.email,
+                    waitingForData: false
+                })
+                toast.success('Updated information successfully',
+                { position: toast.POSITION.BOTTOM_CENTER });
             } catch (err) {
                 this.setState({ waitingForData: false })
                 handleNetworkErrors(err)
@@ -93,7 +102,38 @@ export default class Account extends React.PureComponent {
 
     handlePasswordForm = async (event) => {
         event.preventDefault()
+        const { id, oldPassword, newPassword, newPasswordConfirmation } = this.state
 
+        if (oldPassword && newPassword && newPasswordConfirmation && newPassword === newPasswordConfirmation) {
+            try {
+                // this.setState({ waitingForData: true })
+                const updateData = { 
+                    oldPassword: oldPassword, 
+                    newPassword: newPassword, 
+                    confirmedPassword: newPasswordConfirmation, 
+                }
+
+                const { data } = await Axios.patch(`http://localhost:3129/users/${id}/password`, updateData)
+                console.log(data)
+                // this.setState({ waitingForData: false })
+                if (data.status === 'success') {
+                    sessionStorage.setItem('Parent-Ing_App_KS', newPassword);
+                    toast.success('Password updated successfully ',
+                    { position: toast.POSITION.BOTTOM_CENTER });
+
+                } else {
+                    toast.warn('Something went wrong!!',
+                    { position: toast.POSITION.TOP_CENTER });
+                }
+            } catch (err) {
+                // this.setState({ waitingForData: false })
+                handleNetworkErrors(err)
+            }
+        } else {
+            toast.error('Missing information, All fields are required OR new password confirmation does not match',
+                { position: toast.POSITION.TOP_CENTER });
+        }
+        
     }
 
     handleEmailInput = event => {
@@ -172,6 +212,10 @@ export default class Account extends React.PureComponent {
                             <div className='form-group col-sm-6'>
                                 <label className='' htmlFor='joiningDate'>Member since: </label>
                                 <input className='form-control' id='joiningDate' type='date' value={this.state.joiningDate} disabled></input>
+                            </div>
+                            <div className='form-group col-sm-12'>
+                                <label className='' htmlFor='password'>Please type your current Password to allow changes: </label>
+                                <input className='form-control' id='password' type='password' autoComplete='off' value={this.state.oldPassword} onChange={this.handleOldPasswordInput} required></input>
                             </div>
                             <div className='d-sm-block col-sm-12'>
                                 <button className='d-lg-block'>Update Information</button>
